@@ -1,44 +1,36 @@
 NAME
     re.pl - read, eval, print, loop with tabcompletion
 
-USAGE
-      ./re.pl
-
-      re.pl$ $_ = 42
-      42
-
-      re.pl$ $_ * 2
-      84
-
-      re.pl$ my $foo = sub { $_ = 0; $_++ until $_ == 3; return $_ }; $foo
-      sub {
-          package Eval::WithLexicals::Scratchpad;
-          BEGIN {${^WARNING_BITS} = "\377\377\377\377\377\377\377\377\377\377\377\377\017"}
-          use strict 'refs';
-          $_ = 0;
-          ++$_ until $_ == 3;
-          return $_;
-      }
-
-      re.pl$ my $foo = sub { $_ = 0; $_++ until $_ == 3; return $_ }; $foo->()
-      3
-
 DESCRIPTION
-    Based on mst's example REPL in the awesome Eval::WithLexicals
-    distribution.
-
     re.pl tabcompletes to variables, special file handles, built in
-    functions, operators and control structures if you have
+    functions, operators, control structures and modules if you have
     Term::ReadLine::Gnu available.
 
+    Documentation is also available straight from the REPL;
+
+      re.pl$ perldoc Term::E<TAB>
+      Term::ExtendedColor                     Term::ExtendedColor::TTY::Colorschemes
+      Term::ExtendedColor::TTY                Term::ExtendedColor::Xresources
+
+    A list of available modules is created on the first run, or when the
+    --genmod flag is specified.
+
 OPTIONS
-    None.
+      -g, --genmod    re-create a list of available modules on the system
+
+      -h, --help      show the help and exit
+      -v, --version   show version info and exit
+      -m, --man       show documentation and exit
 
 AUTHOR
       Magnus Woldrich
       CPAN ID: WOLDRICH
       magnus@trapd00r.se
       http://japh.se
+
+HISTORY
+    Based on mst's example REPL in the awesome Eval::WithLexicals
+    distribution.
 
 COPYRIGHT
     Copyright (C) 2011 Magnus Woldrich. All right reserved. This program is
