@@ -27,8 +27,12 @@ WriteMakefile1(
     MAN1PODS            => {
       're.pl'            => 'blib/man1/re.pl.1',
       },
+    MAN3PODS            => {
+
+    },
     dist                => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean               => { FILES => 're.pl-*' },
+
 );
 
 sub WriteMakefile1 {
@@ -58,5 +62,6 @@ sub WriteMakefile1 {
     delete $params{ABSTRACT_FROM}      if $] < 5.005;
     delete $params{BINARY_LOCATION}    if $] < 5.005;
 
+    delete $params{MAN3PODS}->{'README.pod'};
     WriteMakefile(%params);
 }
