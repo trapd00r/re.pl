@@ -1,0 +1,48 @@
+=pod
+
+=head1 NAME
+
+re.pl - read, eval, print, loop with tabcompletion
+
+=head1 DESCRIPTION
+
+
+B<re.pl> tabcompletes to variables, special file handles, built in functions,
+operators, control structures and modules if you have L<Term::ReadLine::Gnu>
+available.
+
+Documentation is also available straight from the REPL;
+
+  re.pl$ perldoc Term::E<TAB>
+  Term::ExtendedColor                     Term::ExtendedColor::TTY::Colorschemes
+  Term::ExtendedColor::TTY                Term::ExtendedColor::Xresources
+
+A list of available modules is created on the first run, or when the B<--genmod>
+flag is specified.
+
+=head1 OPTIONS
+
+  -g, --genmod    re-create a list of available modules on the system
+
+  -h, --help      show the help and exit
+  -v, --version   show version info and exit
+  -m, --man       show documentation and exit
+
+=head1 AUTHOR
+
+  Magnus Woldrich
+  CPAN ID: WOLDRICH
+  magnus@trapd00r.se
+  http://japh.se
+
+=head1 HISTORY
+
+Based on mst's example REPL in the awesome L<Eval::WithLexicals> distribution.
+
+=head1 COPYRIGHT
+
+Copyright (C) 2011 Magnus Woldrich. All right reserved.
+This program is free software; you can redistribute it and/or modify it under
+the same terms as Perl itself.
+
+=cut
