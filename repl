@@ -11,9 +11,8 @@ use Getopt::Long;
 use Term::ReadLine;
 use File::Find::Rule;
 use Eval::WithLexicals;
-use B::Keywords qw/@Symbols @Barewords/;
+use B::Keywords qw/@Symbols/; # @Barewords/;
 
-push(@Symbols, @Barewords);
 push(@Symbols, 'perldoc');
 
 my $module_db = "$ENV{HOME}/.re.pl.db";
@@ -28,38 +27,59 @@ my $module_db = "$ENV{HOME}/.re.pl.db";
 my %modules;
 GetOptions(
   'g|genmod' => sub {
-    unlink($module_db); 
+    unlink($module_db);
   },
   'h|help'    => sub { pod2usage(verbose => 1); },
   'v|version' => sub { printf("%s v%s\n", $APP, $VERSION) and exit 0; },
   'm|man'     => sub { pod2usage(verbose => 3); },
 );
 
-get_installed_modules();
+my @modules = get_installed_modules();
 
 my $eval = Eval::WithLexicals->new;
 
-my $read = Term::ReadLine->new('re.pl');
-my $attr = $read->Attribs;
+my $term = Term::ReadLine->new('re.pl');
+my $attr = $term->Attribs;
+
 $attr->{completion_function} = sub {
-  my($text, $line, $start) = @_;
-  return @Symbols;
+  my($word, $buffer, $start) = @_;
+  return (@Symbols, @modules);
 };
 
-while(defined(my $line = $read->readline('re.pl$ '))) {
+$attr->{autolist}    =  0;
+$attr->{maxcomplete} =  0;
+
+
+# We want a sane keymap
+$term->set_keymap('vi');
+
+
+while(1) {
+  my $line = $term->readline("\e[33m\e[1m>\e[0m ");
+  print "\e[34m";
   my @ret;
+
+
+  my @to_complete;
+
   if($line =~ m/^(perldoc.+)$/) {
     #delete($ENV{PAGER});
     system($1);
     next;
   }
+  elsif($line eq ':q') {
+    exit 0;
+  }
   eval {
     local $SIG{INT} = sub { die("Caught SIGINT"); };
     @ret = $eval->eval($line);
     1;
-  } or @ret = ("Error!", $@);
+  } or print "\e[31;1mError!\n$@\e[0m\n";
 
+  # Differentiate Dumper and evaled function calls i.e print return values
+  print "\e[1m";
   print Dumper @ret;
+  print "\e[0m";
 }
 
 sub get_installed_modules {
@@ -79,21 +99,23 @@ sub get_installed_modules {
     printf("%s\n", (scalar(keys(%modules)) > 0) ? "[OK]" : "");
   }
   store(\%modules, $module_db);
-  push(@Symbols, keys %modules);
+  return keys %modules;
 }
+
+__END__
 
 =pod
 
 =head1 NAME
 
-re.pl - read, eval, print, loop with tabcompletion
+re.pl - read, eval, print, loop with tabcompletion and persistent lexicals
 
 =head1 DESCRIPTION
 
 
 B<re.pl> tabcompletes to variables, special file handles, built in functions,
 operators, control structures and modules if you have L<Term::ReadLine::Gnu>
-available.
+or L<Term::ReadLine::Zoid> available.
 
 Documentation is also available straight from the REPL;
 
@@ -111,6 +133,11 @@ flag is specified.
   -h, --help      show the help and exit
   -v, --version   show version info and exit
   -m, --man       show documentation and exit
+
+=head1 COMMANDS
+
+  perldoc   invoke perldoc
+  :q        exit
 
 =head1 AUTHOR
 
@@ -130,5 +157,3 @@ This program is free software; you can redistribute it and/or modify it under
 the same terms as Perl itself.
 
 =cut
-
-1;
