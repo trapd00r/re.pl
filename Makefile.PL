@@ -5,33 +5,28 @@ use ExtUtils::MakeMaker;
 WriteMakefile1(
     META_MERGE => {
         resources => {
-            repository => 'https://github.com/trapd00r/re.pl',
-            bugtracker => 'https://github.com/trapd00r/re.pl/issues',
+            repository => q{https://github.com/trapd00r/re.pl},
+            bugtracker => q{https://github.com/trapd00r/re.pl/issues},
         },
     },
-    #BUILD_REQUIRES => {
-    #},
-
-    NAME                => 're.pl',
+    NAME                => q{re.pl},
     AUTHOR              => q{Magnus Woldrich <trapd00r@trapd00r.se>},
-    ABSTRACT           => 'Read, Eval, Print, Loop with tabcompletion',
-    VERSION_FROM        => './re.pl',
-    'LICENSE'           => 'perl',
-    EXE_FILES =>           ['re.pl'],
+    ABSTRACT            => q{REPL with tabcompletion and perldoc support},
+    VERSION_FROM        => q{./repl},
+    q{LICENSE}          => q{perl},
+    EXE_FILES           => [ q{repl} ],
     PREREQ_PM => {
-      'Eval::WithLexicals'    => 0,
-      'Term::ReadLine::Gnu'   => 0,
-      'B::Keywords'           => 0,
-      'strictures'            => 0,
+      q{Eval::WithLexicals}    => 0,
+      q{Term::ReadLine::Gnu}   => 0,
+      q{B::Keywords}           => 0,
+      q{strictures}            => 0,
     },
     MAN1PODS            => {
-      're.pl'            => 'blib/man1/re.pl.1',
+      q{repl}           => q{blib/man1/repl.1},
       },
-    MAN3PODS            => {
-
-    },
-    dist                => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
-    clean               => { FILES => 're.pl-*' },
+    MAN3PODS            => { },
+    dist                => { COMPRESS => q{gzip -9f}, SUFFIX => q{gz}, },
+    clean               => { FILES => q{repl-*} },
 
 );
 
