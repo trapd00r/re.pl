@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 use vars qw($VERSION);
 my $APP  = 're.pl';
-$VERSION = '0.120';
+$VERSION = '0.122';
 
 use Storable;
 use strictures 1;
@@ -26,9 +26,8 @@ my $module_db = "$ENV{HOME}/.re.pl.db";
 
 my %modules;
 GetOptions(
-  'g|genmod' => sub {
-    unlink($module_db);
-  },
+  'g|genmod' => sub { unlink($module_db); },
+
   'h|help'    => sub { pod2usage(verbose => 1); },
   'v|version' => sub { printf("%s v%s\n", $APP, $VERSION) and exit 0; },
   'm|man'     => sub { pod2usage(verbose => 3); },
@@ -37,10 +36,9 @@ GetOptions(
 my @modules = get_installed_modules();
 
 my $eval = Eval::WithLexicals->new;
-
 my $term = Term::ReadLine->new('re.pl');
-my $attr = $term->Attribs;
 
+my $attr = $term->Attribs;
 $attr->{completion_function} = sub {
   my($word, $buffer, $start) = @_;
   return (@Symbols, @modules);
@@ -49,13 +47,11 @@ $attr->{completion_function} = sub {
 $attr->{autolist}    =  0;
 $attr->{maxcomplete} =  0;
 
-
-# We want a sane keymap
-$term->set_keymap('vi');
+#$term->set_keymap('vi');
 
 
 while(1) {
-  my $line = $term->readline("\e[33m\e[1m>\e[0m ");
+  my $line = $term->readline("\e[33m\e[1m>\e[m ");
   print "\e[34m";
   my @ret;
 
@@ -79,7 +75,7 @@ while(1) {
   # Differentiate Dumper and evaled function calls i.e print return values
   print "\e[1m";
   print Dumper @ret;
-  print "\e[0m";
+  print "\e[m";
 }
 
 sub get_installed_modules {
@@ -136,8 +132,25 @@ flag is specified.
 
 =head1 COMMANDS
 
-  perldoc   invoke perldoc
-  :q        exit
+  perldoc My::Module # Invoke perldoc; will use the system $PAGER
+  :q, exit           # exit re.pl
+
+=head1 ENVIRONMENT
+
+The behavior in the prompt is controlled by several variables. First, it's
+recommended to have the C<Term::ReadLine::Gnu> module installed. Without it,
+tab-completion and a I<vi> keymap can not be guaranteed.
+
+Next, we'll assume you use B<vi> as your favorite editor. If you don't, skip
+this section.
+
+Two records are required in $HOME/.inputrc for maximum comfort:
+
+  set editing-mode vi
+  set keymap vi-insert
+
+This will make sure that you're in B<insert mode> when C<re.pl> first is
+started.
 
 =head1 AUTHOR
 
@@ -152,7 +165,7 @@ Based on mst's example REPL in the awesome L<Eval::WithLexicals> distribution.
 
 =head1 COPYRIGHT
 
-Copyright (C) 2011 Magnus Woldrich. All right reserved.
+Copyright (C) 2011 Magnus Woldrich.
 This program is free software; you can redistribute it and/or modify it under
 the same terms as Perl itself.
 
