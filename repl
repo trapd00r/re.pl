@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 use vars qw($VERSION);
 my $APP  = 're.pl';
-$VERSION = '0.122';
+$VERSION = '0.124';
 
 use Storable;
 use strictures 1;
@@ -26,7 +26,7 @@ my $module_db = "$ENV{HOME}/.re.pl.db";
 
 my %modules;
 GetOptions(
-  'g|genmod' => sub { unlink($module_db); },
+  'g|genmod'  => sub { unlink($module_db); },
 
   'h|help'    => sub { pod2usage(verbose => 1); },
   'v|version' => sub { printf("%s v%s\n", $APP, $VERSION) and exit 0; },
