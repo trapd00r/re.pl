@@ -9,7 +9,7 @@ WriteMakefile1(
             bugtracker => q{https://github.com/trapd00r/re.pl/issues},
         },
     },
-    NAME                => q{App::re.pl},
+    NAME                => q{App::repl},
     AUTHOR              => q{Magnus Woldrich <trapd00r@trapd00r.se>},
     ABSTRACT            => q{REPL with tabcompletion and perldoc support},
     VERSION_FROM        => q{./repl},
