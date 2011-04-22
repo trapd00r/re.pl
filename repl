@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 use vars qw($VERSION);
 my $APP  = 're.pl';
-$VERSION = '0.124';
+$VERSION = '0.126';
 
 use Storable;
 use strictures 1;
@@ -16,6 +16,11 @@ use B::Keywords qw/@Symbols/; # @Barewords/;
 push(@Symbols, 'perldoc');
 
 my $module_db = "$ENV{HOME}/.re.pl.db";
+
+if(exists($ENV{XDG_DATA_HOME})) {
+  mkdir("$ENV{XDG_DATA_HOME}/re.pl");
+  $module_db = "$ENV{XDG_DATA_HOME}/re.pl/re.pl.db";
+}
 
 {
   package Data::Dumper;
@@ -58,8 +63,7 @@ while(1) {
 
   my @to_complete;
 
-  if($line =~ m/^(perldoc.+)$/) {
-    #delete($ENV{PAGER});
+  if($line =~ m/^(perldoc\s+.+)$/) {
     system($1);
     next;
   }
@@ -108,10 +112,9 @@ re.pl - read, eval, print, loop with tabcompletion and persistent lexicals
 
 =head1 DESCRIPTION
 
-
 B<re.pl> tabcompletes to variables, special file handles, built in functions,
 operators, control structures and modules if you have L<Term::ReadLine::Gnu>
-or L<Term::ReadLine::Zoid> available.
+or L<Term::ReadLine::Zoid> installed.
 
 Documentation is also available straight from the REPL;
 
@@ -141,16 +144,21 @@ The behavior in the prompt is controlled by several variables. First, it's
 recommended to have the C<Term::ReadLine::Gnu> module installed. Without it,
 tab-completion and a I<vi> keymap can not be guaranteed.
 
-Next, we'll assume you use B<vi> as your favorite editor. If you don't, skip
-this section.
-
-Two records are required in $HOME/.inputrc for maximum comfort:
+A couple of records in $HOME/.inputrc will make working with perldoc easier,
+assuming you are using Bash (or anything other that uses readline) as your
+shell:
 
   set editing-mode vi
   set keymap vi-insert
 
-This will make sure that you're in B<insert mode> when C<re.pl> first is
-started.
+  $if re.pl
+    "\C-e": "perldoc perlre\n"
+    "\C-g": "perldoc perlguts\n"
+    "\C-o": "perldoc perlop\n"¶
+    "\C-p": "perldoc perlipc\n"
+    "\C-u": "perldoc perlunicode\n"¶
+    "\C-v": "perldoc perlvar\n"¶
+  $endif
 
 =head1 AUTHOR
 
