@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 use vars qw($VERSION);
 my $APP  = 're.pl';
-$VERSION = '0.126';
+$VERSION = '0.128';
 
 use Storable;
 use strictures 1;
